@@ -1,36 +1,36 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { setSearchField, requestRobots } from '../actions';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { setSearchField, requestRobots } from "../actions";
 
-import CardList from '../components/CardList';
-import SearchBox from '../components/SearchBox';
-import Scroll from '../components/Scroll';
-import ErrorBoundry from '../components/ErrorBoundry';
-import Header from '../components/Header';
+import CardList from "../components/CardList";
+import SearchBox from "../components/SearchBox";
+import Scroll from "../components/Scroll";
+import ErrorBoundary from "../components/ErrorBoundary";
+import Header from "../components/Header";
 
-import './App.css';
+import "./App.css";
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     searchField: state.searchRobots.searchField,
     robots: state.requestRobots.robots,
     isPending: state.requestRobots.isPending
-  }
-}
+  };
+};
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    onSearchChange: (event) => dispatch(setSearchField(event.target.value)),
+    onSearchChange: event => dispatch(setSearchField(event.target.value)),
     onRequestRobots: () => requestRobots(dispatch)
-  }
-}
+  };
+};
 
 class App extends Component {
   constructor() {
-    super()
+    super();
     this.state = {
       count: 1
-    }
+    };
   }
   componentDidMount() {
     this.props.onRequestRobots();
@@ -40,21 +40,23 @@ class App extends Component {
     const { robots, searchField, onSearchChange, isPending } = this.props;
     const filteredRobots = robots.filter(robot => {
       return robot.name.toLowerCase().includes(searchField.toLowerCase());
-    })
+    });
     return (
-      <div className='tc'>
-        <Header count={this.state.count}/>
-        <SearchBox searchChange={onSearchChange}/>
+      <div className="tc">
+        <Header count={this.state.count} />
+        <SearchBox searchChange={onSearchChange} />
         <Scroll>
-          { isPending ? <h1>Loading</h1> :
-            <ErrorBoundry>
+          {isPending ? (
+            <h1>Loading</h1>
+          ) : (
+            <ErrorBoundary>
               <CardList robots={filteredRobots} />
-            </ErrorBoundry>
-          }
+            </ErrorBoundary>
+          )}
         </Scroll>
       </div>
     );
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default connect(mapStateToProps, mapDispatchToProps)(App);
