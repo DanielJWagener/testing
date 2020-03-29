@@ -34,7 +34,7 @@ class MainPage extends Component {
         <SearchBox searchChange={onSearchChange} />
         <Scroll>
           {isPending ? (
-            <h1>Loading</h1>
+            <h1 id="mainPageLoading">Loading</h1>
           ) : (
             <ErrorBoundary>
               <CardList robots={this.filterRobots()} />
