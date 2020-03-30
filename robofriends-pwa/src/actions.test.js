@@ -45,7 +45,7 @@ describe("requestRobots", () => {
     expect.assertions(1);
     const store = mockStore();
 
-    // ONLY RETURNS [TypeError: Network request failed]
+    // ONLY RESPONDS WITH: [TypeError: Network request failed]
     const robotsDB = nock("https://jsonplaceholder.typicode.com/users")
       .get("/")
       .reply(
