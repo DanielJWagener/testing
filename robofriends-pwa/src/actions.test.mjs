@@ -5,10 +5,7 @@ import {
   REQUEST_ROBOTS_FAILED
 } from "./constants";
 
-import { apiCall } from "./api/api";
-import nock from "nock";
-
-import fetch from "node-fetch";
+import fetchMock from "fetch-mock";
 
 import configureMockStore from "redux-mock-store";
 import thunkMiddleware from "redux-thunk";
@@ -40,24 +37,14 @@ describe("requestRobots", () => {
     expect(action[0]).toEqual(expectedAction);
   });
 
-  // CODE IN QUESTION STARTS HERE:
+  // Non-working code starts here:
   it("sends API call data to store", done => {
     expect.assertions(1);
     const store = mockStore();
 
-    // ONLY RESPONDS WITH: [TypeError: Network request failed]
-    const robotsDB = nock("https://jsonplaceholder.typicode.com/users")
-      .get("/")
-      .reply(
-        200,
-        {
-          data: { name: "Jim" }
-        },
-        {
-          "Access-Control-Allow-Origin": "*",
-          "Content-type": "application/json"
-        }
-      );
+    fetchMock.mock("glob:https://jsonplaceholder.typicode.com/users", {
+      data: { name: "Jim" }
+    });
 
     const expectedAction = {
       type: REQUEST_ROBOTS_SUCCESS,
@@ -67,7 +54,6 @@ describe("requestRobots", () => {
     store.dispatch(actions.requestRobots()).then(() => {
       expect(store.getActions()[1]).toEqual(expectedAction);
       done();
-      robotsDB.isDone();
     });
   });
 });
