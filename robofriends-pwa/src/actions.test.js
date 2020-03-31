@@ -27,6 +27,10 @@ describe("setSearchField", () => {
 });
 
 describe("requestRobots", () => {
+  afterEach(() => {
+    fetchMock.restore();
+  });
+
   it("handles requesting robots API", () => {
     const store = mockStore();
     store.dispatch(actions.requestRobots());
@@ -37,7 +41,6 @@ describe("requestRobots", () => {
     expect(action[0]).toEqual(expectedAction);
   });
 
-  // Non-working code starts here:
   it("sends API call data to store", done => {
     expect.assertions(1);
     const store = mockStore();
@@ -49,6 +52,26 @@ describe("requestRobots", () => {
     const expectedAction = {
       type: REQUEST_ROBOTS_SUCCESS,
       payload: { data: { name: "Jim" } }
+    };
+
+    store.dispatch(actions.requestRobots()).then(() => {
+      expect(store.getActions()[1]).toEqual(expectedAction);
+      done();
+    });
+  });
+
+  it("sends errors to store", done => {
+    expect.assertions(1);
+    const store = mockStore();
+
+    fetchMock.mock("glob:https://jsonplaceholder.typicode.com/users", {
+      status: "400",
+      throws: new TypeError("Failed to fetch")
+    });
+
+    const expectedAction = {
+      type: REQUEST_ROBOTS_FAILED,
+      payload: new TypeError("Failed to fetch")
     };
 
     store.dispatch(actions.requestRobots()).then(() => {
