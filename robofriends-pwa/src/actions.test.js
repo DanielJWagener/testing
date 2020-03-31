@@ -9,6 +9,7 @@ import { apiCall } from "./api/api";
 import nock from "nock";
 
 import fetch from "node-fetch";
+import fetchMock from "fetch-mock";
 
 import configureMockStore from "redux-mock-store";
 import thunkMiddleware from "redux-thunk";
